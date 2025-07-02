@@ -1,0 +1,17 @@
+services:
+  api:
+    build: ./back
+    ports:
+      - "3000:3000"
+    volumes:
+      - db_data:/app/data
+
+  web:
+    build: ./front
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+
+volumes:
+  db_data:
