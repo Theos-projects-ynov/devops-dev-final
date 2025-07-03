@@ -17,15 +17,16 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Login to Scaleway Container Registry
-        run: echo "${{ secrets.SCW_SECRET_KEY }}" | docker login rg.fr-par.scw.cloud -u nologin --password-stdin
+        run: |
+          echo "${{ secrets.SCW_SECRET_KEY }}" | docker login rg.fr-par.scw.cloud -u nologin --password-stdin
 
       - name: Inject VITE_API_URL
         run: echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > front/.env.production
 
       - name: Build and push APP image
         run: |
-          docker build -t rg.fr-par.scw.cloud/namespace-theo-stoffelbach-final/my-front:latest ./front
-          docker push rg.fr-par.scw.cloud/namespace-theo-stoffelbach-final/my-front:latest
+          docker build -t rg.fr-par.scw.cloud/namespace-theo-stoffelbach/frontend-app:latest ./front
+          docker push rg.fr-par.scw.cloud/namespace-theo-stoffelbach/frontend-app:latest
 
   deploy-app:
     name: Deploy APP
@@ -70,7 +71,7 @@ jobs:
       - name: Deploy or update frontend container
         run: |
           # Récupérer l'ID du namespace
-          NAMESPACE_ID=$(scw container namespace list -o json | jq -r '.[] | select(.name=="namespace-theo-stoffelbach-final") | .id')
+          NAMESPACE_ID=$(scw container namespace list -o json | jq -r '.[] | select(.name=="namespace-theo-stoffelbach") | .id')
 
           if [ -z "$NAMESPACE_ID" ]; then
             echo "❌ Namespace non trouvé!"
@@ -87,7 +88,7 @@ jobs:
             CONTAINER_ID=$(scw container container create \
               namespace-id=$NAMESPACE_ID \
               name=frontend-web \
-              registry-image=rg.fr-par.scw.cloud/namespace-theo-stoffelbach-final/my-front:latest \
+              registry-image=rg.fr-par.scw.cloud/namespace-theo-stoffelbach/frontend-app:latest \
               port=80 \
               min-scale=0 \
               max-scale=3 \
@@ -100,7 +101,7 @@ jobs:
             echo "🔄 Mise à jour du container existant: $CONTAINER_ID"
             scw container container update \
               container-id=$CONTAINER_ID \
-              registry-image=rg.fr-par.scw.cloud/namespace-theo-stoffelbach-final/my-front:latest
+              registry-image=rg.fr-par.scw.cloud/namespace-theo-stoffelbach/frontend-app:latest
           fi
 
           # Déployer le container

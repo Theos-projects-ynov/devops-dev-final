@@ -28,11 +28,11 @@ jobs:
 
       - name: 🏷️ Tag Docker image for Scaleway
         run: |
-          docker tag backend-api:latest rg.fr-par.scw.cloud/namespace-theo-stoffelbach-final/backend-api:latest
+          docker tag backend-api:latest rg.fr-par.scw.cloud/namespace-theo-stoffelbach/backend-api:latest
 
       - name: 📤 Push Docker image to Scaleway Registry
         run: |
-          docker push rg.fr-par.scw.cloud/namespace-theo-stoffelbach-final/backend-api:latest
+          docker push rg.fr-par.scw.cloud/namespace-theo-stoffelbach/backend-api:latest
 
       - name: ✅ Build Summary
         run: |

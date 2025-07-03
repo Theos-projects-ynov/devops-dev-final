@@ -24,6 +24,8 @@ RUN chmod +x docker-entrypoint.sh
 ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["npm", "start"] 
 
+# docker login rg.fr-par.scw.cloud/namespace-theo-stoffelbach -u nologin --password-stdin <<< "ca6ef95f-0b6c-4b1a-9a7d-a68f7ecf8ff3"
+
 # docker pull back:latest
 # docker tag back:latest rg.fr-par.scw.cloud/namespace-theo-stoffelbach/back:latest
 # docker push rg.fr-par.scw.cloud/namespace-theo-stoffelbach/back:latest
